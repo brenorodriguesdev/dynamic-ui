@@ -12,6 +12,7 @@ export default function CreateController() {
   const [tag, setTag] = useState<string>()
   const [description, setDescription] = useState<string>()
   const [descriptionResult, setDescriptionResult] = useState<string>()
+  const [validators, setValidators] = useState<Array<any>>([])
   const [properties, setProperties] = useState<Array<any>>([])
 
   const [openAddPropertyModal, setOpenAddPropertyModal] = useState<boolean>(false)
@@ -57,7 +58,7 @@ export default function CreateController() {
         <SideBar />
 
         <ModalAddPropertyComponent open={openAddPropertyModal} setOpen={setOpenAddPropertyModal} setProperties={setProperties} properties={properties} />
-        <ModalAddValidatorComponent open={openAddValidatorModal} setOpen={setOpenAddValidatorModal} />
+        <ModalAddValidatorComponent open={openAddValidatorModal} setOpen={setOpenAddValidatorModal} setValidators={setValidators} validators={validators} />
 
         <div className="md:pl-64 flex flex-col flex-1">
           <main className="flex-1">
@@ -140,6 +141,9 @@ export default function CreateController() {
                                 autoComplete="country-name"
                                 className="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                               >
+                                <option>Selecione o validator</option>
+                                {validators.map(validator => <option key={validator.id} value={validator.id}>{validator.name + ' - ' +  validator.param}</option>)}
+
                               </select>
                             </div>
 

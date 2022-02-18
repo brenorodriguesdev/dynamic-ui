@@ -4,11 +4,15 @@ import { toast } from 'react-toastify'
 
 interface ModalAddValidatorProps {
     open: boolean
-    setOpen: any
+    setOpen: any,
+    validators: any,
+    setValidators: any
 }
 export default function ModalAddValidatorComponent({
     open,
-    setOpen
+    setOpen,
+    validators,
+    setValidators
 }: ModalAddValidatorProps) {
     const [name, setName] = useState<string>()
     const [param, setParam] = useState<string>()
@@ -41,6 +45,15 @@ export default function ModalAddValidatorComponent({
                     progress: undefined,
                 });
             }
+
+            setValidators([...validators, {
+                id: validators.length + 1,
+                name,
+                param,
+                required: false
+            }])
+
+            setOpen(false)
 
         }
         catch (error) {
