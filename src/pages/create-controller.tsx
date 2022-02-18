@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
 import ModalAddPropertyComponent from "../components/modal-add-property"
 import ModalAddValidatorComponent from "../components/modal-add-validator"
+import ModalUpdatePropertyComponent from "../components/modal-update-property"
 import SideBar from "../components/sidebar"
 import { api } from "../services/api"
 
@@ -16,8 +17,11 @@ export default function CreateController() {
   const [properties, setProperties] = useState<Array<any>>([])
 
   const [openAddPropertyModal, setOpenAddPropertyModal] = useState<boolean>(false)
+  const [openUpdatePropertyModal, setOpenUpdatePropertyModal] = useState<boolean>(false)
+
   const [openAddValidatorModal, setOpenAddValidatorModal] = useState<boolean>(false)
   const [propertySelected, setPropertySelected] = useState<string>()
+  const [property, setProperty] = useState<any>()
   const [validatorSelected, setValidatorSelected] = useState<string>()
 
   async function onCreate(event: any) {
@@ -56,6 +60,10 @@ export default function CreateController() {
     setValidators(validators.filter(validator => validator.id !== Number(validatorSelected)))
   }
 
+  useEffect(() => {
+    setProperty(properties.find(property => property.id === Number(propertySelected)))
+  }, [propertySelected])
+
 
   return (
     <>
@@ -64,6 +72,7 @@ export default function CreateController() {
         <SideBar />
 
         <ModalAddPropertyComponent open={openAddPropertyModal} setOpen={setOpenAddPropertyModal} setProperties={setProperties} properties={properties} />
+        <ModalUpdatePropertyComponent open={openUpdatePropertyModal} setOpen={setOpenUpdatePropertyModal} setProperties={setProperties} properties={properties} property={property} />
         <ModalAddValidatorComponent open={openAddValidatorModal} setOpen={setOpenAddValidatorModal} setValidators={setValidators} validators={validators} />
 
         <div className="md:pl-64 flex flex-col flex-1">
@@ -199,7 +208,7 @@ export default function CreateController() {
                                 value={propertySelected}
                                 className="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                               >
-                                <option>Selecione a propriedade</option>
+                                <option value={0}>Selecione a propriedade</option>
                                 {properties.map(property => <option key={property.id} value={property.id}>{property.name}</option>)}
                               </select>
                             </div>
@@ -217,6 +226,21 @@ export default function CreateController() {
                                 </button>
 
                                 <button
+                                  onClick={() => {
+                                    if (propertySelected && propertySelected !== '0') {
+                                      setOpenUpdatePropertyModal(true)
+                                    } else {
+                                      return toast.warn('S  elecione a propriedade', {
+                                        position: "bottom-left",
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                      });
+                                    }
+                                  }}
                                   type="button"
                                   className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
