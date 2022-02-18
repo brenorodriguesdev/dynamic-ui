@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { toast } from "react-toastify"
 import ModalAddPropertyComponent from "../components/modal-add-property"
 import ModalAddValidatorComponent from "../components/modal-add-validator"
 import SideBar from "../components/sidebar"
@@ -30,7 +31,16 @@ export default function CreateController() {
       await api.post('createController', controller)
     }
     catch (error: any) {
-      console.log(error?.response?.data?.message)
+
+      return toast.warn(error?.response?.data?.message, {
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
