@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import SideBar from "../components/sidebar"
 import { api } from "../services/api"
+import { toast } from 'react-toastify';
 
 export default function CreateService() {
   const [name, setName] = useState<string>()
@@ -47,7 +48,15 @@ export default function CreateService() {
       await api.post('createService', service)
     }
     catch (error: any) {
-      console.log(error?.response?.data?.message)
+      return toast.warn(error?.response?.data?.message, {
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
