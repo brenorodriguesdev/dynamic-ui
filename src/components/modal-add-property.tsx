@@ -22,7 +22,6 @@ export default function ModalAddPropertyComponent({
             event.preventDefault()
 
             if (!name) {
-                console.log('xd')
                 return toast.warn('O campo nome é um campo obrigatório!', {
                     position: "bottom-left",
                     autoClose: 2000,
@@ -47,6 +46,7 @@ export default function ModalAddPropertyComponent({
             }
 
             setProperties([...properties, {
+                id: properties.length + 1,
                 name,
                 type
             }])
