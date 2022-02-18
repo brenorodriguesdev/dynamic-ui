@@ -1,5 +1,6 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import { toast } from 'react-toastify'
 
 interface ModalAddValidatorProps {
     open: boolean
@@ -9,10 +10,37 @@ export default function ModalAddValidatorComponent({
     open,
     setOpen
 }: ModalAddValidatorProps) {
+    const [name, setName] = useState<string>()
+    const [param, setParam] = useState<string>()
 
+    
     async function onCreate(event: any) {
         try {
             event.preventDefault()
+
+            if (!param) {
+                return toast.warn('O campo nome é um campo obrigatório!', {
+                    position: "bottom-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+
+            if (!name) {
+                return toast.warn('O campo tipo é um campo obrigatório!', {
+                    position: "bottom-left",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
 
         }
         catch (error) {
@@ -63,14 +91,16 @@ export default function ModalAddValidatorComponent({
 
                                         <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
                                             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                                                <label htmlFor="nome" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                                                     Nome do campo que será validado
                                                 </label>
                                                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                                                     <input
                                                         type="text"
-                                                        name="nome"
-                                                        id="nome"
+                                                        name="param"
+                                                        id="param"
+                                                        value={param}
+                                                        onChange={(e) => setParam(e.target.value)}
                                                         className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                                                     />
                                                 </div>
@@ -85,9 +115,10 @@ export default function ModalAddValidatorComponent({
                                                 </label>
                                                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                                                     <select
-                                                        id="method"
-                                                        name="method"
-                                                        // onChange={(e) => setMethod(e.target.value)}
+                                                        id="name"
+                                                        name="name"
+                                                        value={name}
+                                                        onChange={(e) => setName(e.target.value)}
                                                         className="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                                                     >
                                                         <option>Selecione o tipo de validator</option>
