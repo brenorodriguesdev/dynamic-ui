@@ -5,10 +5,14 @@ import { toast } from 'react-toastify';
 interface ModalAddPropertyProps {
     open: boolean
     setOpen: any
+    properties: any
+    setProperties: any
 }
 export default function ModalAddPropertyComponent({
     open,
-    setOpen
+    setOpen,
+    properties,
+    setProperties
 }: ModalAddPropertyProps) {
     const [name, setName] = useState<string>()
     const [type, setType] = useState<string>()
@@ -41,6 +45,13 @@ export default function ModalAddPropertyComponent({
                     progress: undefined,
                 });
             }
+
+            setProperties([...properties, {
+                name,
+                type
+            }])
+
+            setOpen(false)
 
         }
         catch (error) {
