@@ -4,6 +4,7 @@ import { toast } from "react-toastify"
 import ModalAddPropertyComponent from "../components/modal-add-property"
 import ModalAddValidatorComponent from "../components/modal-add-validator"
 import ModalUpdatePropertyComponent from "../components/modal-update-property"
+import ModalUpdateValidatorComponent from "../components/modal-update-validator"
 import SideBar from "../components/sidebar"
 import { api } from "../services/api"
 
@@ -20,9 +21,12 @@ export default function CreateController() {
   const [openUpdatePropertyModal, setOpenUpdatePropertyModal] = useState<boolean>(false)
 
   const [openAddValidatorModal, setOpenAddValidatorModal] = useState<boolean>(false)
+  const [openUpdateValidatorModal, setOpenUpdateValidatorModal] = useState<boolean>(false)
+
   const [propertySelected, setPropertySelected] = useState<string>()
   const [property, setProperty] = useState<any>()
   const [validatorSelected, setValidatorSelected] = useState<string>()
+  const [validator, setValidator] = useState<any>()
 
   async function onCreate(event: any) {
     try {
@@ -64,6 +68,9 @@ export default function CreateController() {
     setProperty(properties.find(property => property.id === Number(propertySelected)))
   }, [propertySelected])
 
+  useEffect(() => {
+    setValidator(validators.find(validator => validator.id === Number(validatorSelected)))
+  }, [validatorSelected])
 
   return (
     <>
@@ -74,6 +81,7 @@ export default function CreateController() {
         <ModalAddPropertyComponent open={openAddPropertyModal} setOpen={setOpenAddPropertyModal} setProperties={setProperties} properties={properties} />
         <ModalUpdatePropertyComponent open={openUpdatePropertyModal} setOpen={setOpenUpdatePropertyModal} setProperties={setProperties} properties={properties} property={property} />
         <ModalAddValidatorComponent open={openAddValidatorModal} setOpen={setOpenAddValidatorModal} setValidators={setValidators} validators={validators} />
+        <ModalUpdateValidatorComponent open={openUpdateValidatorModal} setOpen={setOpenUpdateValidatorModal} setValidators={setValidators} validators={validators} validator={validator} />
 
         <div className="md:pl-64 flex flex-col flex-1">
           <main className="flex-1">
@@ -157,7 +165,7 @@ export default function CreateController() {
                                 value={validatorSelected}
                                 className="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                               >
-                                <option>Selecione o validator</option>
+                                <option value={0}>Selecione o validator</option>
                                 {validators.map(validator => <option key={validator.id} value={validator.id}>{validator.name + ' - ' + validator.param}</option>)}
 
                               </select>
@@ -176,6 +184,21 @@ export default function CreateController() {
                                 </button>
 
                                 <button
+                                  onClick={() => {
+                                    if (validatorSelected && validatorSelected !== '0') {
+                                      setOpenUpdateValidatorModal(true)
+                                    } else {
+                                      return toast.warn('Selecione o validator', {
+                                        position: "bottom-left",
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                      });
+                                    }
+                                  }}
                                   type="button"
                                   className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
@@ -230,7 +253,7 @@ export default function CreateController() {
                                     if (propertySelected && propertySelected !== '0') {
                                       setOpenUpdatePropertyModal(true)
                                     } else {
-                                      return toast.warn('S  elecione a propriedade', {
+                                      return toast.warn('Selecione a propriedade', {
                                         position: "bottom-left",
                                         autoClose: 2000,
                                         hideProgressBar: false,
