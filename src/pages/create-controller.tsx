@@ -44,10 +44,24 @@ export default function CreateController() {
         method,
         tag,
         description,
-        descriptionResult
+        descriptionResult,
+        validators,
+        properties,
+        services
       }
 
       await api.post('createController', controller)
+
+      return toast.success('Controlador criado', {
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
     }
     catch (error: any) {
 

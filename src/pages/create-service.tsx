@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import SideBar from "../components/sidebar"
 import { api } from "../services/api"
 import { toast } from 'react-toastify';
+import ModalAddServiceComponent from "../components/modal-add-service";
 
 export default function CreateService() {
   const [name, setName] = useState<string>()
@@ -21,6 +22,9 @@ export default function CreateService() {
   const [descriptionError, setDescriptionError] = useState<string>()
   const [callBefore, setCallBefore] = useState<boolean>(false)
   const [callOrder, setCallOrder] = useState<string>()
+  const [openAddServiceModal, setOpenAddServiceModal] = useState<boolean>(false)
+  const [services, setServices] = useState<Array<any>>([])
+  const [serviceSelected, setServiceSelected] = useState<string>()
 
   async function onCreate(event: any) {
     try {
@@ -46,6 +50,17 @@ export default function CreateService() {
       }
 
       await api.post('createService', service)
+
+      return toast.success('Serviço criado', {
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
     }
     catch (error: any) {
       return toast.warn(error?.response?.data?.message, {
@@ -60,11 +75,18 @@ export default function CreateService() {
     }
   }
 
+  async function onDeleteService() {
+    setServices(services.filter(service => service._id !== serviceSelected))
+  }
+
+
   return (
     <>
       <div>
 
         <SideBar />
+        <ModalAddServiceComponent open={openAddServiceModal} setOpen={setOpenAddServiceModal} setServices={setServices} services={services} />
+
 
         <div className="md:pl-64 flex flex-col flex-1">
           <main className="flex-1">
@@ -372,11 +394,13 @@ export default function CreateService() {
                             </label>
                             <div className="mt-1 sm:mt-0 sm:col-span-1">
                               <select
-                                id="country"
-                                name="country"
-                                autoComplete="country-name"
+                                onChange={(e) => setServiceSelected(e.target.value)}
+                                id="services"
+                                name="services"
                                 className="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                               >
+                                <option value={0}>Selecione o serviço</option>)
+                                {services.map(service => <option value={service._id}>{service.name}</option>)}
                               </select>
                             </div>
 
@@ -385,13 +409,15 @@ export default function CreateService() {
                               <td className="px-6 whitespace-nowrap text-right text-sm font-medium">
 
                                 <button
+                                  onClick={() => setOpenAddServiceModal(true)}
                                   type="button"
                                   className="bg-white py-2 px-4 mx-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
                                   Adicionar
                                 </button>
                                 <button
-                                  type="submit"
+                                  onClick={() => onDeleteService()}
+                                  type="button"
                                   className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                 >
                                   Remover

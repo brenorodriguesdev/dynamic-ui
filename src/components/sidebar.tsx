@@ -19,7 +19,7 @@ export default function SideBar() {
             {/* Sidebar component, swap this element with another sidebar if you like */}
             <div className="flex flex-col flex-grow pt-5 bg-indigo-700 overflow-y-auto">
                 <div className="flex items-center flex-shrink-0 px-4">
-                    <h1 className="text-lg font-bold text-white">Dynamic</h1>
+                    <h1 className="text-lg font-bold text-white">Dynamic API</h1>
                 </div>
                 <div className="mt-5 flex-1 flex flex-col">
                     <nav className="flex-1 px-2 pb-4 space-y-1">
