@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
 import ModalAddPropertyComponent from "../components/modal-add-property"
+import ModalAddServiceComponent from "../components/modal-add-service"
 import ModalAddValidatorComponent from "../components/modal-add-validator"
 import ModalUpdatePropertyComponent from "../components/modal-update-property"
 import ModalUpdateValidatorComponent from "../components/modal-update-validator"
@@ -16,6 +17,11 @@ export default function CreateController() {
   const [descriptionResult, setDescriptionResult] = useState<string>()
   const [validators, setValidators] = useState<Array<any>>([])
   const [properties, setProperties] = useState<Array<any>>([])
+  const [services, setServices] = useState<Array<any>>([])
+
+
+
+  const [openAddServiceModal, setOpenAddServiceModal] = useState<boolean>(false)
 
   const [openAddPropertyModal, setOpenAddPropertyModal] = useState<boolean>(false)
   const [openUpdatePropertyModal, setOpenUpdatePropertyModal] = useState<boolean>(false)
@@ -27,6 +33,7 @@ export default function CreateController() {
   const [property, setProperty] = useState<any>()
   const [validatorSelected, setValidatorSelected] = useState<string>()
   const [validator, setValidator] = useState<any>()
+  const [serviceSelected, setServiceSelected] = useState<string>()
 
   async function onCreate(event: any) {
     try {
@@ -64,13 +71,18 @@ export default function CreateController() {
     setValidators(validators.filter(validator => validator.id !== Number(validatorSelected)))
   }
 
+  async function onDeleteService() {
+    setServices(services.filter(service => service._id !== serviceSelected))
+  }
+
+
   useEffect(() => {
     setProperty(properties.find(property => property.id === Number(propertySelected)))
-  }, [propertySelected])
+  }, [properties, propertySelected])
 
   useEffect(() => {
     setValidator(validators.find(validator => validator.id === Number(validatorSelected)))
-  }, [validatorSelected])
+  }, [validatorSelected, validators])
 
   return (
     <>
@@ -78,6 +90,7 @@ export default function CreateController() {
 
         <SideBar />
 
+        <ModalAddServiceComponent open={openAddServiceModal} setOpen={setOpenAddServiceModal} setServices={setServices} services={services} />
         <ModalAddPropertyComponent open={openAddPropertyModal} setOpen={setOpenAddPropertyModal} setProperties={setProperties} properties={properties} />
         <ModalUpdatePropertyComponent open={openUpdatePropertyModal} setOpen={setOpenUpdatePropertyModal} setProperties={setProperties} properties={properties} property={property} />
         <ModalAddValidatorComponent open={openAddValidatorModal} setOpen={setOpenAddValidatorModal} setValidators={setValidators} validators={validators} />
@@ -335,16 +348,19 @@ export default function CreateController() {
                           </div>
 
                           <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                            <label htmlFor="country" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                            <label htmlFor="services" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                               Serviços chamados
                             </label>
                             <div className="mt-1 sm:mt-0 sm:col-span-1">
                               <select
-                                id="country"
-                                name="country"
-                                autoComplete="country-name"
+                                onChange={(e) => setServiceSelected(e.target.value)}
+                                id="services"
+                                name="services"
+                                autoComplete="services"
                                 className="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                               >
+                                <option value={0}>Selecione o serviço</option>)
+                                {services.map(service => <option value={service._id}>{service.name}</option>)}
                               </select>
                             </div>
 
@@ -353,13 +369,15 @@ export default function CreateController() {
                               <td className="px-6 whitespace-nowrap text-right text-sm font-medium">
 
                                 <button
+                                  onClick={() => setOpenAddServiceModal(true)}
                                   type="button"
                                   className="bg-white py-2 px-4 mx-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
                                   Adicionar
                                 </button>
                                 <button
-                                  type="submit"
+                                  onClick={() => onDeleteService()}
+                                  type="button"
                                   className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                 >
                                   Remover
